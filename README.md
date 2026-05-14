@@ -9,7 +9,7 @@ The dashboard provides interactive visualizations and KPI tracking to help ident
 
 ## 🖥️ Dashboard Preview
 
-![Dashboard Preview](Screenshots/Mobile_sales_dashboard_Screenshot.png)
+![Dashboard Preview](Screenshots/Mobile_sales_dashboard_screenshot.png)
 
 ---
 
