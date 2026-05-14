@@ -1,0 +1,19 @@
+Source = Excel.Workbook(File.Contents("F:\Downloads\Day - 30 - Mobile Sales Data.xlsx"), null, true),
+    Sheet1_Sheet = Source{[Item="Sheet1",Kind="Sheet"]}[Data],
+    #"Promoted Headers" = Table.PromoteHeaders(Sheet1_Sheet, [PromoteAllScalars=true]),
+    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Transaction ID", Int64.Type}, {"Day", Int64.Type}, {"Month", Int64.Type}, {"Year", Int64.Type}, {"Day Name", type text}, {"Brand", type text}, {"Units Sold", Int64.Type}, {"Price Per Unit", type number}, {"Customer Name", type text}, {"Customer Age", Int64.Type}, {"City", type text}, {"Payment Method", type text}, {"Customer Ratings", Int64.Type}, {"Mobile Model", type text}}),
+    #"Added Custom" = Table.AddColumn(#"Changed Type", "Custom", each [Day]&"-"&[Month]&"-"&[Year]),
+    #"Renamed Columns" = Table.RenameColumns(#"Added Custom",{{"Custom", "Date"}}),
+    #"Removed Columns" = Table.RemoveColumns(#"Renamed Columns",{"Date"}),
+    #"Changed Type1" = Table.TransformColumnTypes(#"Removed Columns",{{"Day", type text}, {"Month", type text}, {"Year", type text}}),
+    #"Added Custom1" = Table.AddColumn(#"Changed Type1", "Custom", each [Day]&"-"&[Month]&"-"&[Year]),
+    #"Renamed Columns1" = Table.RenameColumns(#"Added Custom1",{{"Custom", "Date"}}),
+    #"Reordered Columns" = Table.ReorderColumns(#"Renamed Columns1",{"Transaction ID", "Date", "Day", "Month", "Year", "Day Name", "Brand", "Units Sold", "Price Per Unit", "Customer Name", "Customer Age", "City", "Payment Method", "Customer Ratings", "Mobile Model"}),
+    #"Removed Columns1" = Table.RemoveColumns(#"Reordered Columns",{"Day", "Month", "Year", "Day Name"}),
+    #"Changed Type2" = Table.TransformColumnTypes(#"Removed Columns1",{{"Date", type date}}),
+    #"Inserted Day Name" = Table.AddColumn(#"Changed Type2", "Day Name", each Date.DayOfWeekName([Date]), type text),
+    #"Inserted Day Name1" = Table.AddColumn(#"Inserted Day Name", "Day Name.1", each Date.DayOfWeekName([Date]), type text),
+    #"Removed Columns2" = Table.RemoveColumns(#"Inserted Day Name1",{"Day Name.1"}),
+    #"Reordered Columns1" = Table.ReorderColumns(#"Removed Columns2",{"Transaction ID", "Date", "Day Name", "Brand", "Units Sold", "Price Per Unit", "Customer Name", "Customer Age", "City", "Payment Method", "Customer Ratings", "Mobile Model"})
+in
+    #"Reordered Columns1"
